@@ -28,18 +28,6 @@ class TrelloAPIBoardsClass(TrelloAPIBaseClass):
         self.parameters["closed"] = closed
         return self
 
-    def should_board_contains_list_with_name(self, expected_name):
-        result = filter(lambda board: board["name"] == expected_name, self.api_response.json())
-        if not list(result):
-            raise AssertionError(f"There is no board with name {expected_name}")
-        return self
-
-    def should_board_contains_member_with_certain_type(self, expected_member_type):
-        result = filter(lambda board: board["memberType"] == expected_member_type, self.api_response.json())
-        if not list(result):
-            raise AssertionError(f"There is no member with type {expected_member_type}")
-        return self
-
     def get_test_board_id(self):
         self.test_board_id = self.api_response.json()['id']
         return self
