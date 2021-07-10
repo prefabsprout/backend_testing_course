@@ -1,13 +1,12 @@
-from HW3.test.testclasses.trello_api_boards_сlass import TrelloAPIBoardsClass
 from HW3.test.testutils.api_response_checker import APIResponseChecker
 
 
 class TestTrelloAPIBoards:
     def test_board_creation_without_name(self, authentication_data, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_name(name=None) \
-            .post()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_name = None
+        response = trello_api_boards_instance.post()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(400) \
@@ -15,58 +14,63 @@ class TestTrelloAPIBoards:
 
     def test_to_do_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration,
                                                            trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_configuration) \
-            .get("/lists")
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = board_with_lists_configuration
+        response = trello_api_boards_instance.get("/lists")
 
-        APIResponseChecker(response).should_status_code_be_as_expected(200) \
+        APIResponseChecker(response) \
+            .should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("To Do")
 
     def test_doing_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration,
                                                            trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_configuration) \
-            .get("/lists")
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = board_with_lists_configuration
+        response = trello_api_boards_instance.get("/lists")
 
-        APIResponseChecker(response).should_status_code_be_as_expected(200) \
+        APIResponseChecker(response) \
+            .should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("Doing")
 
     def test_done_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration,
                                                           trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_configuration) \
-            .get("/lists")
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = board_with_lists_configuration
+        response = trello_api_boards_instance.get("/lists")
 
-        APIResponseChecker(response).should_status_code_be_as_expected(200) \
+        APIResponseChecker(response) \
+            .should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("Done")
 
     def test_create_board_with_name_over_max_length(self, authentication_data, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_name(name="z" * 16385) \
-            .post()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_name = "z" * 16385
+        response = trello_api_boards_instance.post()
 
         APIResponseChecker(response).should_status_code_be_as_expected(400)
 
     def test_update_board_name(self, authentication_data, test_board_configuration, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .set_board_name("better_test_name") \
-            .put()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        trello_api_boards_instance.board_name = "better_test_name"
+        response = trello_api_boards_instance.put()
 
-        APIResponseChecker(response).should_json_attribute_contains_expected_values(json_attribute="name",
-                                                                                    expected_value="better_test_name")
+        APIResponseChecker(response) \
+            .should_status_code_be_as_expected(200) \
+            .should_json_attribute_contains_expected_values(json_attribute="name",
+                                                            expected_value="better_test_name")
 
     def test_update_board_description(self, authentication_data, test_board_configuration, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .set_board_description("descriiiiiiiiiiiiiiiiiiiiiiption") \
-            .put()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        trello_api_boards_instance.board_description = "descriiiiiiiiiiiiiiiiiiiiiiption"
+        response = trello_api_boards_instance.put()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(200) \
@@ -74,20 +78,20 @@ class TestTrelloAPIBoards:
                                                             expected_value="descriiiiiiiiiiiiiiiiiiiiiiption")
 
     def test_create_board_with_wrong_api_key(self, authentication_data, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data("0123456789", authentication_data["token"]) \
-            .set_board_name(name="good_nice_board") \
-            .post()
+        trello_api_boards_instance.key = "0123456789"
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_name = "good_nice_board"
+        response = trello_api_boards_instance.post()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(401) \
             .should_text_response_be_as_expected("invalid key")
 
     def test_create_board_with_wrong_token(self, authentication_data, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], "0123456789") \
-            .set_board_name(name="good_nice_board") \
-            .post()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = "0123456789"
+        trello_api_boards_instance.board_name = "good_nice_board"
+        response = trello_api_boards_instance.post()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(401) \
@@ -95,38 +99,34 @@ class TestTrelloAPIBoards:
 
     def test_board_delete(self, authentication_data, test_board_configuration, trello_api_boards_instance):
         # Delete board
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .delete()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        delete_response = trello_api_boards_instance.delete()
 
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
+        APIResponseChecker(delete_response).should_status_code_be_as_expected(200)
 
         # Check for deleted board existence
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .get()
+        get_response = trello_api_boards_instance.get()
 
-        APIResponseChecker(response).should_status_code_be_as_expected(404)
+        APIResponseChecker(get_response).should_status_code_be_as_expected(404)
 
     def test_get_single_board(self, authentication_data, test_board_configuration, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .get()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        response = trello_api_boards_instance.get()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(200) \
             .should_json_attribute_contains_expected_values("name", "test_board")
 
     def test_board_can_be_closed(self, authentication_data, test_board_configuration, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .set_closed_status(True) \
-            .put()
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        trello_api_boards_instance.closed_status = True
+        response = trello_api_boards_instance.put()
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(200) \
@@ -134,10 +134,10 @@ class TestTrelloAPIBoards:
             .should_json_attribute_contains_expected_values("closed", True)
 
     def test_get_memberships_list(self, authentication_data, test_board_configuration, trello_api_boards_instance):
-        response = trello_api_boards_instance \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(test_board_configuration) \
-            .get("/memberships")
+        trello_api_boards_instance.key = authentication_data["key"]
+        trello_api_boards_instance.token = authentication_data["token"]
+        trello_api_boards_instance.board_id = test_board_configuration
+        response = trello_api_boards_instance.get("/memberships")
 
         APIResponseChecker(response) \
             .should_status_code_be_as_expected(200) \

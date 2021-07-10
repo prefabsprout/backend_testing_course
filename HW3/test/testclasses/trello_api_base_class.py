@@ -5,12 +5,22 @@ class TrelloAPIBaseClass:
     def __init__(self):
         self.base_url = "https://api.trello.com"
         self.parameters = dict()
-        self.api_response = None
 
-    def set_authentication_data(self, key, token):
-        self.parameters["key"] = key
-        self.parameters["token"] = token
-        return self
+    @property
+    def key(self):
+        return self.parameters['key']
+
+    @key.setter
+    def key(self, key):
+        self.parameters['key'] = key
+
+    @property
+    def token(self):
+        return self.parameters['token']
+
+    @token.setter
+    def token(self, token):
+        self.parameters['token'] = token
 
     def get(self, api_route=""):
         return requests.get(f"{self.base_url}{api_route}", params=self.parameters)
