@@ -13,20 +13,16 @@ class TrelloAPIBaseClass:
         return self
 
     def get(self, api_route=""):
-        self.api_response = requests.get(f"{self.base_url}{api_route}", params=self.parameters)
-        return self
+        return requests.get(f"{self.base_url}{api_route}", params=self.parameters)
 
     def post(self):
-        self.api_response = requests.post(self.base_url, json=self.parameters)
-        return self
+        return requests.post(self.base_url, json=self.parameters)
 
     def put(self):
-        self.api_response = requests.put(self.base_url, json=self.parameters)
-        return self
+        return requests.put(self.base_url, json=self.parameters)
 
     def delete(self, api_route=""):
-        self.api_response = requests.delete(f"{self.base_url}{api_route}", params=self.parameters)
-        return self
+        return requests.delete(f"{self.base_url}{api_route}", params=self.parameters)
 
     def should_status_code_be_as_expected(self, expected_status_code):
         assert self.api_response.status_code == expected_status_code, \

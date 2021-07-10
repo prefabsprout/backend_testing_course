@@ -11,15 +11,15 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="function")
 def test_board_configuration(pytestconfig):
     trello_api_boards = TrelloAPIBoardsClass()
-    trello_api_boards \
+    response = trello_api_boards \
         .set_authentication_data(pytestconfig.getoption("key"), pytestconfig.getoption("token")) \
         .set_board_name(name="test_board") \
-        .post() \
-        .get_test_board_id()
-    yield trello_api_boards.test_board_id
+        .post()
+    test_board_id = response.json()['id']
+    yield test_board_id
     trello_api_boards \
         .set_authentication_data(pytestconfig.getoption("key"), pytestconfig.getoption("token")) \
-        .set_board_id(trello_api_boards.test_board_id) \
+        .set_board_id(test_board_id) \
         .delete()
 
 
