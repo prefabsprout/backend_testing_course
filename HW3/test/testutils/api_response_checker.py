@@ -20,8 +20,8 @@ class APIResponseChecker:
 
     def should_json_response_be_expected_length(self, expected_length):
         assert len(self.response.json()) == expected_length, f"JSON response length " \
-                                                                 f"expected to be {expected_length}, " \
-                                                                 f"not {len(self.response.json())}"
+                                                             f"expected to be {expected_length}, " \
+                                                             f"not {len(self.response.json())}"
         return self
 
     def should_board_contains_list_with_name(self, expected_name):
