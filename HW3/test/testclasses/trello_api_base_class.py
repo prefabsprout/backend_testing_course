@@ -2,9 +2,10 @@ import requests
 
 
 class TrelloAPIBaseClass:
-    def __init__(self):
+    def __init__(self, authentication_data):
         self.base_url = "https://api.trello.com"
-        self.parameters = dict()
+        self.parameters = {"key": authentication_data['key'],
+                           "token": authentication_data['token']}
 
     @property
     def key(self):

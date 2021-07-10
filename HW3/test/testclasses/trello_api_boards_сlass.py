@@ -2,8 +2,8 @@ from .trello_api_base_class import TrelloAPIBaseClass
 
 
 class TrelloAPIBoardsClass(TrelloAPIBaseClass):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, authentication_data):
+        super().__init__(authentication_data)
         self.base_url = f"{self.base_url}/1/boards"
 
     @property
