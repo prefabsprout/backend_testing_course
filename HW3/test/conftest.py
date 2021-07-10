@@ -24,5 +24,21 @@ def test_board_configuration(pytestconfig):
 
 
 @pytest.fixture(scope="function")
+def board_with_lists_configuration(pytestconfig):
+    trello_api_boards = TrelloAPIBoardsClass()
+    response = trello_api_boards \
+        .set_authentication_data(pytestconfig.getoption("key"), pytestconfig.getoption("token")) \
+        .set_board_name(name="test_board") \
+        .set_default_list_parameter(True) \
+        .post()
+    board_with_lists_id = response.json()['id']
+    yield board_with_lists_id
+    trello_api_boards \
+        .set_authentication_data(pytestconfig.getoption("key"), pytestconfig.getoption("token")) \
+        .set_board_id(board_with_lists_id) \
+        .delete()
+
+
+@pytest.fixture(scope="function")
 def authentication_data(pytestconfig):
     return {"key": pytestconfig.getoption("key"), "token": pytestconfig.getoption("token")}

@@ -14,104 +14,38 @@ class TestTrelloAPIBoards:
             .should_status_code_be_as_expected(400) \
             .should_text_response_be_as_expected("invalid value for name")
 
-    def test_should_to_do_list_exists_while_creating_board_with_default_lists(self, authentication_data):
-        # Create board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_name(name="test_board_with_default_lists_option") \
-            .set_default_list_parameter(True) \
-            .post()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
-
-        # Get board ID
-        board_with_lists_id = response.json()["id"]
-
+    def test_to_do_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration):
         # Get board with lists
         trello_api_boards = TrelloAPIBoardsClass()
         response = trello_api_boards \
             .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
+            .set_board_id(board_with_lists_configuration) \
             .get("/lists")
 
         APIResponseChecker(response).should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("To Do")
 
-        # Delete board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
-            .delete()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
-
-    def test_should_doing_list_exists_while_creating_board_with_default_lists(self, authentication_data):
-        # Create board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_name(name="test_board_with_default_lists_option") \
-            .set_default_list_parameter(True) \
-            .post()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
-
-        # Get board ID
-        board_with_lists_id = response.json()["id"]
-
+    def test_doing_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration):
         # Get board with lists
         trello_api_boards = TrelloAPIBoardsClass()
         response = trello_api_boards \
             .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
+            .set_board_id(board_with_lists_configuration) \
             .get("/lists")
 
         APIResponseChecker(response).should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("Doing")
 
-        # Delete board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
-            .delete()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
-
-    def test_should_done_list_exists_while_creating_board_with_default_lists(self, authentication_data):
-        # Create board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_name(name="test_board_with_default_lists_option") \
-            .set_default_list_parameter(True) \
-            .post()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
-
-        # Get board ID
-        board_with_lists_id = response.json()["id"]
-
+    def test_done_list_exists_in_board_with_default_lists(self, authentication_data, board_with_lists_configuration):
         # Get board with lists
         trello_api_boards = TrelloAPIBoardsClass()
         response = trello_api_boards \
             .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
+            .set_board_id(board_with_lists_configuration) \
             .get("/lists")
 
         APIResponseChecker(response).should_status_code_be_as_expected(200) \
             .should_board_contains_list_with_name("Done")
-
-        # Delete board with lists
-        trello_api_boards = TrelloAPIBoardsClass()
-        response = trello_api_boards \
-            .set_authentication_data(authentication_data["key"], authentication_data["token"]) \
-            .set_board_id(board_with_lists_id) \
-            .delete()
-
-        APIResponseChecker(response).should_status_code_be_as_expected(200)
 
     def test_create_board_with_name_over_max_length(self, authentication_data):
         trello_api_boards = TrelloAPIBoardsClass()
