@@ -40,5 +40,10 @@ def board_with_lists_configuration(pytestconfig):
 
 
 @pytest.fixture(scope="function")
+def trello_api_boards_instance(pytestconfig):
+    return TrelloAPIBoardsClass()
+
+
+@pytest.fixture(scope="function")
 def authentication_data(pytestconfig):
     return {"key": pytestconfig.getoption("key"), "token": pytestconfig.getoption("token")}
